@@ -10,28 +10,28 @@ NAICS API is currently a Node.js server that returns NAICS data in a JSON format
 
 ### API documentation
 
-[Latest API documentation is hosted at Apiary.io.](http://docs.naicsapi.apiary.io/)
+[Latest API documentation is hosted at Apiary.io.](http://docs.naics.apiary.io/)
 
 ### API example requests
 
 Example request
 
-    http://api.naics.us/v0/q?year=2012&code=519120
+    http://api.data.gov/gsa/naics/q?year=2012&code=519120
 
 
 To get NAICS codes above a given code
 
-    http://api.naics.us/v0/q?year=2012&code=519120&above=1
+    http://api.data.gov/gsa/naics/q?year=2012&code=519120&above=1
 
 
 To get NAICS codes below a given code
 
-    http://api.naics.us/v0/q?year=2012&code=51&below=1
+    http://api.data.gov/gsa/naics/q?year=2012&code=51&below=1
 
 
 To get all NAICS codes for a given years codes (only 2007 and 2012 are available right now)
 
-    http://api.naics.us/v0/q?year=2012
+    http://api.data.gov/gsa/naics/?year=2012
 
 
 To get all NAICS codes for given search terms (searches only title and index right now)
@@ -39,22 +39,11 @@ To get all NAICS codes for given search terms (searches only title and index rig
     http://api.naics.us/v0/s?year=2012&terms=libraries
 
 
-__Warning!__ The URL (server and/or structure) is likely to change in the very near future. Do not use for production (yet).
-
-
 ### Usage
 
 * A simple example demo search interface for NAICS codes [site](http://louh.github.io/naics-search) and [repository](https://github.com/louh/naics-search)
 
 * Work in progress real-world application [site](http://lv-dof-staging.herokuapp.com/) and [repository](https://github.com/rclosner/lv-dof)
-
-
-### Additional information
-
-* An early NAICS scraper at [daguar/naics-scraper](https://github.com/daguar/naics-scraper/))
-* Further discussion at [dobtco/NAICS](https://github.com/dobtco/NAICS/issues/1)
-* Ongoing progress report at [codeforamerica/hack-requests](https://github.com/codeforamerica/hack-requests/blob/master/naics-api.md)
-
 
 ## Development setup (on Mac OS X 10.8)
 
@@ -102,7 +91,7 @@ On the API side:
 We use the [GitHub issue tracker][issues] to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted. When submitting a bug report, please include a [Gist][] that includes a stack trace and any details that may be necessary to reproduce the bug, including your gem version, Ruby version, and operating system. Ideally, a bug report should include a pull request with failing specs.
 
 [gist]: https://gist.github.com/
-[issues]: https://github.com/codeforamerica/naics-api/issues?&state=open
+[issues]: https://github.com/18f/naics-api/issues?&state=open
 
 ### Submitting a Pull Request
 1. [Fork the repository.][fork]
@@ -115,6 +104,3 @@ We use the [GitHub issue tracker][issues] to track bugs and features. Before sub
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
-
-
-[![Code for America Tracker](http://stats.codeforamerica.org/codeforamerica/cfa_template.png)](http://stats.codeforamerica.org/projects/naics-api)

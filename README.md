@@ -1,4 +1,4 @@
-# NAICS-API
+# Code Talker
 
 [NAICS](http://www.census.gov/eos/www/naics/) (North American Industry Classification System) is maintained by the United States Bureau of Labor Statistics to classify business types. It is used for aggregating, presenting, and analyzing data and trends in the US economy.
 
@@ -10,7 +10,7 @@ NAICS API is currently a Node.js server that returns NAICS data in a JSON format
 
 ### API documentation
 
-[Latest API documentation is hosted at Apiary.io.](http://docs.naics.apiary.io/)
+[Latest API documentation is hosted at Apiary.io.](http://docs.codetalker.apiary.io/)
 
 ### API example requests
 
@@ -91,7 +91,7 @@ On the API side:
 We use the [GitHub issue tracker][issues] to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted. When submitting a bug report, please include a [Gist][] that includes a stack trace and any details that may be necessary to reproduce the bug, including your gem version, Ruby version, and operating system. Ideally, a bug report should include a pull request with failing specs.
 
 [gist]: https://gist.github.com/
-[issues]: https://github.com/18f/naics-api/issues?&state=open
+[issues]: https://github.com/18f/codetalker/issues?&state=open
 
 ### Submitting a Pull Request
 1. [Fork the repository.][fork]

@@ -2,3 +2,11 @@ node_modules
 config/runtime.json
 *.log
 .DS_Store
+node_modules
+public
+.tmp
+.sass-cache
+app/bower_components
+heroku
+/views
+dist

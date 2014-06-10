@@ -15,7 +15,16 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: [],
+files: [
+
+  // simple pattern to load the needed testfiles
+  // equal to {pattern: 'test/unit/*.spec.js', watched: true, served: true, included: true}
+  'client/*.js'
+
+  // this file gets served but will be ignored by the watcher
+  // note if html2js preprocessor is active, reference as `window.__html__['compiled/index.html']`
+//  {pattern: 'client/runner.html', watched: false}
+],
 
     // list of files / patterns to exclude
     exclude: [],

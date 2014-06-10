@@ -8,12 +8,24 @@ describe('Querying NAICS by year', function() {
   
   it('should respond with JSON array', function(done) {
     request(app)
-      .get('/api/q')
+      .get('/api/q?year=2012')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
         res.body.should.be.instanceof(Array);
+        done();
+      });
+  });
+
+  it('should require a year parameter', function(done) {
+    request(app)
+      .get('/api/q')
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('error', 'Please include a NAICS year.');
         done();
       });
   });
@@ -37,7 +49,7 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('code', 400);
+        res.body.should.have.property('error', 'Please use a valid NAICS year.');
         done();
       });
   });

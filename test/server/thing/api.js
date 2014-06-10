@@ -6,9 +6,18 @@ var should = require('should'),
 
 describe('Querying NAICS by year', function() {
   
-  it('should respond with JSON array', function(done) {
+  it('should respond with JSON array when given a valid year', function(done) {
     request(app)
       .get('/api/q?year=2012')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.be.instanceof(Array);
+      });
+
+      request(app)
+      .get('/api/q?year=2007')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {

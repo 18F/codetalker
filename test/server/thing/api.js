@@ -13,7 +13,7 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.be.instanceof(Array);
+        res.body.results.should.be.instanceof(Array);
       });
 
       request(app)
@@ -22,7 +22,7 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.be.instanceof(Array);
+        res.body.results.should.be.instanceof(Array);
         done();
       });
   });
@@ -46,12 +46,13 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.be.instanceof(Array);
+        //res.body.should.have.property('results');
+        res.body.results.should.be.instanceof(Array);
         done();
       });
   });
 
-  it('should reject an invalid year', function(done) {
+  it('should reject an invalid NAICS year', function(done) {
     request(app)
       .get('/api/q?year=2099')
       .expect(400)
@@ -59,6 +60,41 @@ describe('Querying NAICS by year', function() {
       .end(function(err, res) {
         if (err) return done(err);
         res.body.should.have.property('error', 'Please use a valid NAICS year.');
+        done();
+      });
+  });
+
+  it("should generate an error if year parameter is valid but we don't have data for it", function(done) {
+    request(app)
+      .get('/api/q?year=2002')
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('error', 'NAICS API does not currently include 2002 data.');
+      });
+
+      request(app)
+      .get('/api/q?year=1997')
+      .expect(404)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('error', 'NAICS API does not currently include 1997 data.');
+        done();
+      });
+  });
+
+  it('should return all 2,328 entries for year 2007', function (done) {
+      request(app)
+      .get('/api/q?year=2007')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+
+        res.body.results.should.have.property('length', 2328); 
+        //should(res.body.results).have.property('length', 2328); 
         done();
       });
   });

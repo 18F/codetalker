@@ -39,19 +39,6 @@ describe('Querying NAICS by year', function() {
       });
   });
 
-  it('should respond with an array for year 2007', function(done) {
-    request(app)
-      .get('/api/q?year=2007')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        //res.body.should.have.property('results');
-        res.body.results.should.be.instanceof(Array);
-        done();
-      });
-  });
-
   it('should reject an invalid NAICS year', function(done) {
     request(app)
       .get('/api/q?year=2099')
@@ -85,7 +72,7 @@ describe('Querying NAICS by year', function() {
       });
   });
 
-  it('should return all 2,335 entries for year 2007', function (done) {
+  it('should return all 2,328 entries for year 2007', function (done) {
       request(app)
       .get('/api/q?year=2007')
       .expect(200)
@@ -93,8 +80,7 @@ describe('Querying NAICS by year', function() {
       .end(function(err, res) {
         if (err) return done(err);
 
-        res.body.results.should.have.property('length', 2335); 
-        //should(res.body.results).have.property('length', 2328); 
+        res.body.should.have.property('num_found', 2328); 
         done();
       });
   });
@@ -108,8 +94,7 @@ describe('Querying NAICS by year', function() {
       .end(function(err, res) {
         if (err) return done(err);
 
-        res.body.results.should.have.property('length', 2216); 
-        //should(res.body.results).have.property('length', 2328); 
+        res.body.should.have.property('num_found', 2209); 
         done();
       });
   });

@@ -81,7 +81,7 @@
     "url": "https://github.com/louh/naics-api.git"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "grunt serve",
     "test": "grunt test"
   },
   "main": "server.js"

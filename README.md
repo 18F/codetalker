@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/18F/codetalker.svg?branch=master)](https://travis-ci.org/18F/codetalker)
+
 # Code Talker
 
 ## The Product

@@ -34,7 +34,8 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('error', 'Please include a NAICS year.');
+        res.body.should.have.property('message', 'Please include a NAICS year.');
+        res.body.should.have.property('status', 400);
         done();
       });
   });
@@ -46,7 +47,8 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('error', 'Please use a valid NAICS year.');
+        res.body.should.have.property('message', 'Please use a valid NAICS year.');
+        res.body.should.have.property('status', 400); 
         done();
       });
   });
@@ -58,7 +60,8 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('error', 'NAICS API does not currently include 2002 data.');
+        res.body.should.have.property('message', 'NAICS API does not currently include 2002 data.');
+        res.body.should.have.property('status', 404);
       });
 
       request(app)
@@ -67,7 +70,8 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('error', 'NAICS API does not currently include 1997 data.');
+        res.body.should.have.property('message', 'NAICS API does not currently include 1997 data.');
+        res.body.should.have.property('status', 404);
         done();
       });
   });

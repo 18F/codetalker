@@ -1,5 +1,13 @@
 language: node_js
 node_js:
-  - '0.10'
+- '0.10'
 before_script:
-  - 'npm install -g grunt-cli'
+- npm install -g grunt-cli
+deploy:
+  provider: opsworks
+  access_key_id: AKIAJ4PN3RRCFRJCIL7A
+  secret_access_key:
+    secure: TtZkRpM0ywfzrfJfyQ9PcfH1RV3Tv22UFa48AGnHv0JTO+ce48x3BdXEFCUO/6LCyp8lCN8wxxqtxsLVHlyUdWeEdT3/EJqOqphrvVw/WxFhd6SRxlN7k77EmAOHrnXSxbpMPm8E3lkArzcq5DUJDT+D8t1v39lDQbhVPfdN5Mk=
+  app-id: 14e0ce33-fe9c-47df-96c1-d3cc11187dd6
+  on:
+    repo: 18F/codetalker

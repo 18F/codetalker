@@ -99,4 +99,17 @@ describe('Querying NAICS by year', function() {
       });
   });
 
+    it('should return 10 results when limit 10', function (done) {
+      request(app)
+      .get('/api/q?year=2012&limit=10')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('num_found', 2209); 
+        res.body.results.should.have.property('length', 10); 
+        done();
+      });
+  });
+
 });

@@ -58,6 +58,10 @@ if [ ! -d "$PUPPET_DIR" ]; then
 fi
 cp /vagrant/tools/puppet/Puppetfile $PUPPET_DIR
 
+if [ "$(gem search -i puppet)" = "false" ]; then
+  gem install puppet --no-ri --no-rdoc
+fi
+
 if [ "$(gem search -i librarian-puppet)" = "false" ]; then
   gem install librarian-puppet --no-ri --no-rdoc
   cd $PUPPET_DIR && librarian-puppet install --clean

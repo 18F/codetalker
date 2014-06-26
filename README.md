@@ -10,6 +10,13 @@ Code Talker 's NAICS endpoints return NAICS data in JSON format. Information sto
 ## NAICS
 [NAICS](http://www.census.gov/eos/www/naics/) (North American Industry Classification System) is maintained by the United States Bureau of Labor Statistics to classify business types. The classification system is currently hosted by the [Census Bureau](http://www.census.gov/eos/www/naics/) and provided in various Excel and PDF documents.  Our goal is to improve on the Census Bureau's offerings by providing an API to make information machine-readable, with better search functionality, to assist with developing applications that depend on understanding or collecting information about businesses. 
 
+## Installation
+
+```
+vagrant plugin install vagrant-vbguest
+vagrant up
+```
+
 ### API documentation
 
 [Latest API documentation is hosted at Apiary.io.](http://docs.codetalker.apiary.io/)

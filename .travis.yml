@@ -2,7 +2,8 @@ language: node_js
 node_js:
 - '0.10'
 before_install:
-- npm install -g grunt-cli
+- sh tools/puppet/files/librarian.sh
+- puppet apply tools/puppet/manifests/site.pp
 deploy:
   provider: opsworks
   access_key_id: AKIAJUWHVUZI4E4P7I4Q

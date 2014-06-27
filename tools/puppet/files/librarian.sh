@@ -1,4 +1,5 @@
 #!/bin/sh
+SCRIPTPATH=`pwd`
 
 # Hack to remove 'stdin: is not a tty' messages
 # See 'https://github.com/mitchellh/vagrant/issues/1673#issuecomment-26650102'
@@ -6,6 +7,17 @@ sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 
 # Directory in which librarian-puppet should manage its modules directory
 PUPPET_DIR=~/puppet/
+
+echo 'testing for the location of the Puppetfile'
+PUPPETFILE="$SCRIPTPATH/tools/puppet/Puppetfile"
+echo $PUPPETFILE
+if [ -f "$PUPPETFILE" ]
+then
+    echo "$PUPPETFILE found"
+else
+    echo '$PUPPETFILE not found! Terminating...'
+    exit 1
+fi
 
 # NB: librarian-puppet might need git and ruby-dev/ruby-devel installed. If they
 # are not already installed # in your basebox, this will manually install them
@@ -56,7 +68,7 @@ fi
 if [ ! -d "$PUPPET_DIR" ]; then
   mkdir -p $PUPPET_DIR
 fi
-cp /vagrant/tools/puppet/Puppetfile $PUPPET_DIR
+cp $PUPPETFILE $PUPPET_DIR
 
 if [ "$(gem search -i puppet)" = "false" ]; then
   gem install puppet --no-ri --no-rdoc

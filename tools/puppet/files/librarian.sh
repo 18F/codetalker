@@ -1,6 +1,14 @@
 #!/bin/sh
 SCRIPTPATH=`pwd`
 
+# Handle ruby when on travis using rbenv
+export HOME=/home/user
+if [ -d $HOME/.rbenv ]; then
+  echo "Initializing the rbenv"  
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  eval "$(rbenv init -)"
+fi
+
 # Hack to remove 'stdin: is not a tty' messages
 # See 'https://github.com/mitchellh/vagrant/issues/1673#issuecomment-26650102'
 sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
@@ -8,12 +16,8 @@ sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 # Directory in which librarian-puppet should manage its modules directory
 PUPPET_DIR=~/puppet/
 
-echo 'testing for the location of the Puppetfile'
 PUPPETFILE="$SCRIPTPATH/tools/puppet/Puppetfile"
-if [ -f "$PUPPETFILE" ]
-then
-    echo "$PUPPETFILE found"
-else
+if [ ! -f "$PUPPETFILE" ]; then
     echo "$PUPPETFILE not found! Terminating..."
     exit 1
 fi

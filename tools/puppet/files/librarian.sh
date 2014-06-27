@@ -1,13 +1,23 @@
 #!/bin/sh
 SCRIPTPATH=`pwd`
 
+echo "HOME: $HOME"
+echo "PATH: $PATH"
+
 # Handle ruby when on travis using rbenv
-export HOME=/home/user
+# export HOME=/home/user
 if [ -d $HOME/.rbenv ]; then
   echo "Initializing the rbenv"  
   export PATH="$HOME/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
 fi
+
+# Add rbenv to your PATH
+# NOTE: rbenv is *NOT* compatible with rvm, so you'll need to 
+# remove rvm from your profile if it's present. (This is because
+# rvm overrides the `gem` command.)
+echo 'export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"' >> ~/.bash_profile
+exec $SHELL
 
 # Hack to remove 'stdin: is not a tty' messages
 # See 'https://github.com/mitchellh/vagrant/issues/1673#issuecomment-26650102'

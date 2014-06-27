@@ -5,7 +5,7 @@
 sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 
 # Directory in which librarian-puppet should manage its modules directory
-PUPPET_DIR=/etc/puppet/
+PUPPET_DIR=~/puppet/
 
 # NB: librarian-puppet might need git and ruby-dev/ruby-devel installed. If they
 # are not already installed # in your basebox, this will manually install them

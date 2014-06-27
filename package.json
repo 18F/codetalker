@@ -78,11 +78,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/louh/naics-api.git"
+    "url": "https://github.com/18F/codetalker.git"
   },
   "scripts": {
+    "install": "grunt build",
     "start": "grunt serve",
-    "test": "grunt test"
+    "test": "grunt test",
+    "dist": "grunt serve:dist"
   },
   "main": "server.js"
 }

@@ -4,10 +4,8 @@ forge "http://forge.puppetlabs.com"
 
 mod "puppetlabs/vcsrepo"
 mod "puppetlabs/stdlib"
-mod "puppetlabs/nodejs"
+mod "willdurand/nodejs"
 mod "maestrodev/puppet-wget",
     :git => "git://github.com/maestrodev/puppet-wget.git"
-mod "puppetlabs/postgresql"
 mod "puppetlabs/apt"
 mod "saz/timezone"
-mod "stankevich/python"

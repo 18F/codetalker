@@ -463,7 +463,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
-      return grunt.task.run(['build', 'express:prod', 'open', 'express-keepalive']);
+      return grunt.task.run(['build', 'express:prod', 'express-keepalive']);
     }
 
     if (target === 'debug') {
@@ -482,7 +482,6 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer',
       'express:dev',
-      'open',
       'watch'
     ]);
   });

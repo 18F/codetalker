@@ -16,9 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network :forwarded_port, guest: 9200, host: 9201
-  config.vm.network :forwarded_port, guest: 3000, host: 9301
-  config.vm.network :forwarded_port, guest: 8000, host: 9801
+  config.vm.network :forwarded_port, guest: 9000, host: 9000
 
   # fix for DNS Resolving issue in certain versions of Linux
   # from: http://serverfault.com/a/506206/55559

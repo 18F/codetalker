@@ -1,15 +1,11 @@
 #Install Node and NPM
 class { 'nodejs':
-    version => 'v0.10.25',
-    make_install => false,
-}
-
-package {'grunt-cli':
+  version => 'stable',
+}->
+package {['grunt-cli', 'forever']:
+  ensure      => present,
   provider    => 'npm',
-}
-
-package {'forever':
-  provider  => 'npm',
+  require     => Class['nodejs'],
 }
 
 user {'evented':
@@ -41,7 +37,17 @@ package { [
   ensure  => 'installed',
 }
 
-exec { 'npm_install':
-  command   => "npm install",
-  require   => Class['nodejs']
+exec { 'install_compass':
+  command   => "gem install compass",
+  unless    => "gem search -i compass",
 }
+->exec { 'install_server':
+  command   => "npm install",
+  cwd       => "/vagrant",
+  require   => Class['nodejs']
+}->
+  exec { 'start':
+    command   => "forever start server.js",
+    cwd       => "/vagrant",
+    unless    => "ps -ef | grep '[f]orever'"
+  }

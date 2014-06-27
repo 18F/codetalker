@@ -10,12 +10,11 @@ PUPPET_DIR=~/puppet/
 
 echo 'testing for the location of the Puppetfile'
 PUPPETFILE="$SCRIPTPATH/tools/puppet/Puppetfile"
-echo $PUPPETFILE
 if [ -f "$PUPPETFILE" ]
 then
     echo "$PUPPETFILE found"
 else
-    echo '$PUPPETFILE not found! Terminating...'
+    echo "$PUPPETFILE not found! Terminating..."
     exit 1
 fi
 

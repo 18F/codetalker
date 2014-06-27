@@ -5,6 +5,7 @@ before_install:
 - npm install -g grunt-cli
 - npm install -g bower
 - gem install compass
+- bower install
 deploy:
   provider: opsworks
   access_key_id: AKIAJUWHVUZI4E4P7I4Q

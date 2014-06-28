@@ -1,6 +1,6 @@
 # Configuration for librarian-puppet. For example:
 #
-forge "http://forge.puppetlabs.com"
+forge "https://forgeapi.puppetlabs.com"
 
 mod "puppetlabs/vcsrepo"
 mod "puppetlabs/stdlib"

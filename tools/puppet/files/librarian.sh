@@ -1,22 +1,30 @@
-#!/bin/sh
-SCRIPTPATH=`pwd`
+#!/bin/bash
 
 # Hack to remove 'stdin: is not a tty' messages
 # See 'https://github.com/mitchellh/vagrant/issues/1673#issuecomment-26650102'
 sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 
+## who am i? ##
+_script="$(readlink -f ${BASH_SOURCE[0]})"
+ 
+## Delete last component from $_script ##
+SCRIPT_DIR="$(dirname $_script)"
+ 
+## Okay, print it ##
+echo "Script name : $_script"
+echo "Current working dir : $PWD"
+echo "Script location path (dir) : $SCRIPT_DIR"
+
 # Directory in which librarian-puppet should manage its modules directory
 PUPPET_DIR=/etc/puppet/
 
-if [ ! -f "$SCRIPTPATH/librarian.sh" ]; then
-    echo "Assuming running inside vagrant" 
-    SCRIPTPATH="/vagrant"
-fi
-
-PUPPETFILE="$SCRIPTPATH/tools/puppet/Puppetfile"
+PUPPETFILE="$SCRIPT_DIR/../Puppetfile"
 if [ ! -f "$PUPPETFILE" ]; then
-    echo "$PUPPETFILE not found! Terminating..."
-    exit 1
+    PUPPETFILE="/vagrant/tools/puppet/Puppetfile"
+    if [ ! -f "$PUPPETFILE" ]; then
+        echo "$PUPPETFILE not found! Terminating..."
+        exit 1
+    fi
 fi
 
 # NB: librarian-puppet might need git and ruby-dev/ruby-devel installed. If they

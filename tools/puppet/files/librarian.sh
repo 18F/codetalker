@@ -1,28 +1,17 @@
 #!/bin/sh
 SCRIPTPATH=`pwd`
 
-echo "HOME: $HOME"
-echo "PATH: $PATH"
-echo "Ruby version: $(ruby --version)"
-echo "Gem version: $(gem --version)"
-echo "Rvm rubies and gemsets: $(rvm list gemsets)"
-
-
-# Handle ruby when on travis using rbenv
-# export HOME=/home/user
-if [ -d $HOME/.rbenv ]; then
-  echo "Initializing the rbenv"  
-  export PATH="$HOME/.rbenv/bin:$PATH"
-  eval "$(rbenv init -)"
-fi
-
-
 # Hack to remove 'stdin: is not a tty' messages
 # See 'https://github.com/mitchellh/vagrant/issues/1673#issuecomment-26650102'
 sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
 
 # Directory in which librarian-puppet should manage its modules directory
-PUPPET_DIR=~/puppet/
+PUPPET_DIR=/etc/puppet/
+
+if [ ! -f "$SCRIPTPATH/librarian.sh" ]; then
+    echo "Assuming running inside vagrant" 
+    SCRIPTPATH="/vagrant"
+fi
 
 PUPPETFILE="$SCRIPTPATH/tools/puppet/Puppetfile"
 if [ ! -f "$PUPPETFILE" ]; then

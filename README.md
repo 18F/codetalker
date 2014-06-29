@@ -12,6 +12,8 @@ Code Talker 's NAICS endpoints return NAICS data in JSON format. Information sto
 
 ## Installation
 
+First install the lastest Vagrant () and Virtualbox (4.3.12+). Then run the below in the console.
+
 ```
 vagrant plugin install vagrant-vbguest
 vagrant up

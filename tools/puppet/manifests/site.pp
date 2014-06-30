@@ -25,15 +25,18 @@ user {'codetalker':
     version => 'stable',
   }
   
-  package {['grunt-cli', 'forever']:
+  package {['grunt-cli', 'bower', 'forever']:
     ensure      => present,
     provider    => 'npm',
     require     => Class['nodejs'],
-  }
-
+  }->
   exec { 'install_compass':
     command   => "gem install compass",
     unless    => "gem search -i compass",
+  }->
+    exec { 'install_bower':
+    command   => "bower install --quiet",
+    cwd		  => "/vagrant",
   }->
   exec { 'install_server':
     command   => "npm install",

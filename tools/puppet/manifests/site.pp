@@ -8,6 +8,7 @@ user {'codetalker':
   Exec {
       path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/", "/usr/local/node/node-default/bin/" ],
       timeout   => 0,
+      cwd		  => "/vagrant",
   }
 
   class { 'apt':
@@ -25,7 +26,7 @@ user {'codetalker':
     version => 'stable',
   }
   
-  package {['grunt-cli', 'bower', 'forever']:
+  package {['grunt-cli', 'forever']:
     ensure      => present,
     provider    => 'npm',
     require     => Class['nodejs'],
@@ -35,15 +36,18 @@ user {'codetalker':
     unless    => "gem search -i compass",
   }->
     exec { 'install_bower':
+    command   => "gem install bower",
+    unless	  => "gem search -i bower",
+  }->
+    exec { 'install_bower_dependencies':
     command   => "bower install --quiet",
-    cwd		  => "/vagrant",
+    user		=> "codetalker",
   }->
   exec { 'install_server':
     command   => "npm install",
-    cwd       => "/vagrant",
     require   => Class['nodejs'],
   }->exec { 'start':
       command   => "forever start server.js",
-      cwd       => "/vagrant",
       unless    => "ps -ef | grep '[f]orever'",
+      user		=> "codetalker",
   }

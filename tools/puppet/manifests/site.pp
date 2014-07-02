@@ -21,23 +21,19 @@ user {'codetalker':
     timezone => 'UTC',
   }
 
+  package { ['sass', 'compass']:
+    ensure => 'installed',
+    provider => 'gem',
+  }
+
   #Install Node and NPM
   class { 'nodejs':
     version => 'stable',
   }
-  
-  package {['grunt-cli', 'forever']:
-    ensure      => present,
-    provider    => 'npm',
+
+  exec { 'install_node_commandline_tools':
+    command   => "npm install -g grunt-cli bower forever",
     require     => Class['nodejs'],
-  }->
-  exec { 'install_compass':
-    command   => "gem install compass",
-    unless    => "gem search -i compass",
-  }->
-    exec { 'install_bower':
-    command   => "gem install bower",
-    unless	  => "gem search -i bower",
   }->
     exec { 'install_bower_dependencies':
     command   => "bower install --quiet",
@@ -49,5 +45,4 @@ user {'codetalker':
   }->exec { 'start':
       command   => "forever start server.js",
       unless    => "ps -ef | grep '[f]orever'",
-      user		=> "codetalker",
   }

@@ -44,6 +44,9 @@ To get all NAICS codes for a given years codes (only 2007 and 2012 are available
 
     http://api.data.gov/gsa/naics/?year=2012
 
+To get only a partial set of fields in the response
+
+    http://api.data.gov/gsa/naics/?year=2012&field=code&field=title
 
 To get all NAICS codes for given search terms (searches only title and index right now)
 

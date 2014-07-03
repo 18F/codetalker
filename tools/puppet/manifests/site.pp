@@ -1,8 +1,8 @@
-user {'codetalker':
-    groups => ['sudo'],
+user {'vagrant':
+    # groups => ['sudo'],
     ensure => present,
-    managehome => true,
-    shell => '/bin/bash',
+    # managehome => true,
+    # shell => '/bin/bash',
   }
 
   Exec {
@@ -11,14 +11,8 @@ user {'codetalker':
       cwd		  => "/vagrant",
   }
 
-  class { 'apt':
-    always_apt_update    => true,
-    update_timeout       => undef
-  }
-
-  #Set system timezone to UTC
-  class { "timezone":
-    timezone => 'UTC',
+  package { 'curl':
+    ensure => 'installed'
   }
 
   package { ['sass', 'compass']:
@@ -27,22 +21,53 @@ user {'codetalker':
   }
 
   #Install Node and NPM
-  class { 'nodejs':
-    version => 'stable',
-  }
+  class prepare {
+  class { 'apt': }
+  apt::ppa { 'ppa:chris-lea/node.js': }
+}
+include prepare
+ 
+package {'nodejs': ensure => present, require => Class['prepare'],}
 
-  exec { 'install_node_commandline_tools':
-    command   => "npm install -g grunt-cli bower forever",
-    require     => Class['nodejs'],
-  }->
-    exec { 'install_bower_dependencies':
-    command   => "bower install --quiet",
-    user		=> "codetalker",
-  }->
-  exec { 'install_server':
-    command   => "npm install",
-    require   => Class['nodejs'],
-  }->exec { 'start':
-      command   => "forever start server.js",
-      unless    => "ps -ef | grep '[f]orever'",
+  # class { 'nodejs':
+  #   version => 'stable',
+  #   make_install => 'false',
+  # }->
+  # file{'make_node_local':
+  # path  => '/usr/local/node/node-default',  
+  # ensure => 'directory',
+  # mode  => '700',
+  # owner => 'vagrant',
+  # group => 'vagrant',
+  # recurse => 'inf',
+  # }
+
+  #Install npm packages globally
+   exec { 'install_node_cli_tools':
+     command => 'sudo npm install -g grunt-cli bower forever',
+     require   => Class['nodejs'],
+     user => 'vagrant',
+   }->
+     file{'set_node_ownership':
+  path  => '/home/vagrant/.npm',  
+  ensure => 'directory',
+  mode  => '700',
+  owner => 'vagrant',
+  group => 'vagrant',
+  recurse => 'inf',
   }
+   ->
+  exec { 'install_bower_dependencies':
+     command   => "bower install --quiet",
+     user    => 'vagrant',
+   }->
+   exec { 'install_server':
+     command   => "npm install",
+     require   => Class['nodejs'],
+     user    => 'vagrant',
+   }
+  #  ->exec { 'start':
+  #      command   => "forever start server.js",
+  #      unless    => "ps -ef | grep '[f]orever'",
+  #              user    => 'vagrant',      
+  # }

@@ -9,14 +9,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
+  # Add a little extra memory so that grunt/node doesn't hang during concurrent tasks
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
   # Every Vagrant virtual environment requires a box to build off of
   # Ubuntu 14.04 minimal box
-  config.vm.box = "notgary/ubuntu-14-04-base"
+  config.vm.box = "Official Ubuntu Daily Cloud Image amd65"
+  config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
+
+  #For Grunt Serve
   config.vm.network :forwarded_port, guest: 9000, host: 9000
+  # For live-reload in grunt
+  config.vm.network :forwarded_port, guest: 35729, host: 35729
 
   # fix for DNS Resolving issue in certain versions of Linux
   # from: http://serverfault.com/a/506206/55559

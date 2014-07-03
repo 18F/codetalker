@@ -116,4 +116,65 @@ describe('Querying NAICS by year', function() {
       });
   });
 
+   it('should return all fields if `field` argument absent', function (done) {
+      request(app)
+      .get('/api/q?year=2012&limit=1')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        (res.body.results[0]).should.have.property('seq_no'); 
+        (res.body.results[0]).should.have.property('code'); 
+        (res.body.results[0]).should.have.property('title'); 
+        (res.body.results[0]).should.have.property('description');
+        done();
+      });
+  });
+   
+   it('should only return single requested field', function (done) {
+      request(app)
+      .get('/api/q?year=2012&limit=2&field=title')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        (res.body.results[0]).should.have.property('title'); 
+        (res.body.results[0]).should.not.have.property('description');
+        (res.body.results[0]).should.not.have.property('seq_no');
+        (res.body.results[0]).should.not.have.property('code');
+        (res.body.results[1]).should.have.property('title'); 
+        (res.body.results[1]).should.not.have.property('description'); 
+        (res.body.results[1]).should.not.have.property('seq_no');
+        (res.body.results[1]).should.not.have.property('code');
+        done();
+      });
+  });
+
+   it('should only return multiple requested fields', function (done) {
+      request(app)
+      .get('/api/q?year=2012&field=code&limit=1&field=title')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        (res.body.results[0]).should.have.property('title'); 
+        (res.body.results[0]).should.not.have.property('description');
+        (res.body.results[0]).should.not.have.property('seq_no');
+        (res.body.results[0]).should.have.property('code');
+        done();
+      });
+  });
+   
+   it('should return empty objects if only nonexistent fields specified', function (done) {
+      request(app)
+      .get('/api/q?year=2012&limit=1&field=foo')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.results.should.eql([{}]);
+        done();
+      });
+  });
+
 });

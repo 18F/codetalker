@@ -50,6 +50,22 @@ GET /q{?year}
     ]
 }
 
+Limit fields returned to field(s) specified.
+GET /q{?year,field}
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "name": "2012 NAICS Codes",
+    "year": 2012,
+    "items": [
+        {
+            "title": "Agriculture, Forestry, Fishing and Hunting"
+        },
+        {  ...  }
+    ]
+}
+
 Get a single NAICS code.
 GET /q{?year,code}
 > Accept: application/json

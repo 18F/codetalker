@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Add a little extra memory so that grunt/node doesn't hang during concurrent tasks
   config.vm.provider "virtualbox" do |v|
-    v.memory = 1024
+    v.memory = 2048 
   end
 
   # Every Vagrant virtual environment requires a box to build off of
@@ -48,6 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
+  #config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -75,7 +76,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the file ..pp in the manifests_path directory.
   config.vm.provision :puppet do |puppet|
      puppet.manifests_path = "tools/puppet/manifests"
-     puppet.options = ['--verbose']
+     puppet.options = ['--verbose --debug']
      puppet.manifest_file  = "site.pp"
      puppet.facter = {
         "fqdn" => "devel"

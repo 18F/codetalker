@@ -10,21 +10,70 @@ Code Talker 's NAICS endpoints return NAICS data in JSON format. Information sto
 ## NAICS
 [NAICS](http://www.census.gov/eos/www/naics/) (North American Industry Classification System) is maintained by the United States Bureau of Labor Statistics to classify business types. The classification system is currently hosted by the [Census Bureau](http://www.census.gov/eos/www/naics/) and provided in various Excel and PDF documents.  Our goal is to improve on the Census Bureau's offerings by providing an API to make information machine-readable, with better search functionality, to assist with developing applications that depend on understanding or collecting information about businesses. 
 
-## Installation
+## Installation as a local server
+
+### Installation with Vagrant
+
+Vagrant is a tool letting you easily set up a virtual machine with all requirements
+for `codetalker` pre-installed.
 
 First install the lastest Vagrant () and Virtualbox (4.3.12+). Then run the below in the console.
 
 ```
 vagrant plugin install vagrant-vbguest
 vagrant up
-```
+vagrant ssh
+``` 	
 
-### API documentation
+### (Alternately) Installation without Vagrant
+
+
+1) Download and install [Node.js](http://nodejs.org/) and [Ruby](rubylang.org).  
+
+2) 
+
+    sudo npm install -g grunt-cli bower
+    sudo gem install compass
+
+## Setup
+
+After installation of the software, 
+
+1) Clone this repository to a folder on your computer. The rest of this document will refer to this folder as `$PROJECT_ROOT`.
+
+    export PROJECT_ROOT=`pwd`/codetalker
+    git clone https://github.com/18F/codetalker.git $PROJECT_ROOT
+
+2) Install project-specific dependencies.
+
+    cd $PROJECT_ROOT
+    nodenv rehash
+    bower install
+    npm install
+    
+### Every time you sync $PROJECT_ROOT with the remote GitHub repo
+
+1) Update the project dependencies.
+
+    cd $PROJECT_ROOT
+    npm install
+
+### To start the REST API server
+
+1) Start the REST API server.
+
+    cd $PROJECT_ROOT
+    npm start
+
+## API documentation
 
 [Latest API documentation is hosted at Apiary.io.](http://docs.codetalker.apiary.io/)
 
 ### API example requests
 
+(To run these examples against your local development server, replace 
+`http://api.data.gov/gsa/naics/` with `http://localhost:9000/api/`)
+ 
 Example request
 
     http://api.data.gov/gsa/naics/q?year=2012&code=519120
@@ -44,6 +93,9 @@ To get all NAICS codes for a given years codes (only 2007 and 2012 are available
 
     http://api.data.gov/gsa/naics/?year=2012
 
+To get only a partial set of fields in the response
+
+    http://api.data.gov/gsa/naics/?year=2012&field=code&field=title
 
 To get all NAICS codes for given search terms (searches only title and index right now)
 
@@ -55,33 +107,6 @@ To get all NAICS codes for given search terms (searches only title and index rig
 * A simple example demo search interface for NAICS codes [site](http://louh.github.io/naics-search) and [repository](https://github.com/louh/naics-search)
 
 * Work in progress real-world application [site](http://lv-dof-staging.herokuapp.com/) and [repository](https://github.com/rclosner/lv-dof)
-
-## Development setup (on Mac OS X 10.8)
-
-### First-time setup
-
-1) Download and install [Node.js](http://nodejs.org/).
-
-2) Clone this repository to a folder on your computer. The rest of this document will refer to this folder as `$PROJECT_ROOT`.
-
-3) Install project dependencies.
-
-    cd $PROJECT_ROOT
-    npm install
-
-### Every time you sync $PROJECT_ROOT with the remote GitHub repo
-
-1) Update the project dependencies.
-
-    cd $PROJECT_ROOT
-    npm install
-
-### To start the REST API server
-
-1) Start the REST API server.
-
-    cd $PROJECT_ROOT
-    npm start
 
 ## Contributing
 

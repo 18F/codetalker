@@ -9,6 +9,8 @@ before_install:
 - sudo pip3 install ddlgenerator
 - psql -c 'create database codetalker;' -U postgres
 - cd data; ./import_data.sh
+- wc -l all_codes.sql
+- psql -c "select count(*) from all_codes" -U postgres codetalker
 - cd ..
 - npm install -g grunt-cli
 - npm install -g bower

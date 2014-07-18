@@ -138,6 +138,8 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
+        console.log("testing the results");
+        console.log(res.body.results);
         (res.body.results[0]).should.have.property('title'); 
         (res.body.results[0]).should.not.have.property('description');
         (res.body.results[0]).should.not.have.property('seq_no');

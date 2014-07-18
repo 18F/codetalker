@@ -12,6 +12,8 @@ before_install:
 - cd ..
 - npm install -g grunt-cli
 - npm install -g bower
+- npm install -g coffee-script
+- npm install -g easy-pg
 - gem install compass
 - bower install
 deploy:

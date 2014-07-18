@@ -17,7 +17,7 @@ limit_clause = (query) ->
         if query.page
             page = " OFFSET #{query.limit * (query.page - 1)}"
         else if query.start
-            page = " OFFSET #{+query.start + 1}"
+            page = " OFFSET #{+query.start - 1}"
         else
             page = ""
         return " LIMIT #{query.limit} #{page} "

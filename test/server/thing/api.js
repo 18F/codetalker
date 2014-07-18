@@ -200,16 +200,14 @@ describe('Querying NAICS by year', function() {
   it('should offset result set by number of pages specified', function(done) {
       // we'll query a 10-record page 1, then a 5-record page 2;
       // the page 2 records should be the same as the last 5 from page 1
-      var full_page_results;
+      var first_results;
       request(app)
       .get('/api/q?year=2012&limit=10&field=code&page=1')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('num_found', 10); 
-        res.body.results.should.have.property('length', 10);
-        full_page_results = res.body.results;
+        first_results = res.body.results;
         request(app)
         .get('/api/q?year=2012&limit=5&field=code&page=2')
         .expect(200)
@@ -218,12 +216,36 @@ describe('Querying NAICS by year', function() {
           if (err) return done(err);
           res.body.should.have.property('num_found', 5); 
           res.body.results.should.have.property('length', 5);
-          console.log(_.isEqual(res.body.results[0], full_page_results[5]));
-          (_.isEqual(res.body.results[0], full_page_results[5])).should.be.true;
-          (_.isEqual(res.body.results[1], full_page_results[6])).should.be.true;
+          (_.isEqual(res.body.results[0], first_results[5])).should.be.true;
+          (_.isEqual(res.body.results[1], first_results[6])).should.be.true;
           done();
         });
       });
   });
    
+
+  it('should offset result set by number of records set by start parameter', function(done) {
+      // we'll query 5 records, then again with start=3;
+      // the first row returned from the second query should match the third of the first query
+      var first_results;
+      request(app)
+      .get('/api/q?year=2012&limit=5&field=code')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        first_results = res.body.results;
+        request(app)
+        .get('/api/q?year=2012&limit=5&field=code&start=3')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          if (err) return done(err);
+          (_.isEqual(res.body.results[0], first_results[2])).should.be.true;
+          (_.isEqual(res.body.results[1], first_results[3])).should.be.true;
+          done();
+        });
+      });
+  });
+      
 });

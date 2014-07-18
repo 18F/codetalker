@@ -14,6 +14,7 @@ before_install:
 - npm install -g bower
 - npm install -g coffee-script
 - npm install -g easy-pg
+- npm install -g lodash
 - gem install compass
 - bower install
 deploy:

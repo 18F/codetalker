@@ -31,7 +31,7 @@ field_list = (query) ->
             fields = [query.field,]
         else
             fields = query.field
-        fields = (f for f in all_fields when f in fields)
+        fields = (f for f in all_fields when f in (fs.toLowerCase() for fs in fields))
     else
         fields = all_fields
     ("code.#{f}" for f in fields)
@@ -39,44 +39,33 @@ field_list = (query) ->
     
 module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
     
-    console.log "\n*******************************************\n\n"
-    console.log "query is #{JSON.stringify query}"    
+    fields_requested = field_list(query)
+    if (query.field) and (not fields_requested.length)
+        returnError 400, 'Fields that can be specified: code, year, title, description, crossrefs'
+        return
+        
     fields = field_list(query) or " NULL "
 
     if 'code.crossrefs' in fields
         fields.pop 'code.crossrefs'
-        fields.push 'xr.code'
-        fields.push 'xr.text'
         group_by_clause = " GROUP BY #{fields} "
         fields.push """ '[' || string_agg(format('{"code": "%s", "text": "%s"}',
-                                                 crossrefs.code, REPLACE(crossrefs.text, '"', '\\"')),
+                                                 xr.code, REPLACE(xr.text, '"', '\\"')),
                                           ',')
                             || ']' as crossrefs """
-        join_clause = " JOIN (select * from crossrefs) xr ON (xr.all_codes_id = code.id_) "
+        join_clause = " LEFT OUTER JOIN (select * from crossrefs) xr ON (xr.all_codes_id = code.id_) "
     else
         join_clause = ""
         group_by_clause = ""
         
-    query_text = "SELECT #{fields}
+    query_text = """
+                  SELECT #{fields}
                   FROM   code #{join_clause}
                   WHERE  part_of_range IS NULL
                   #{in_clause query, 'year'} #{in_clause query, 'code'}
-                  #{group_by_clause} #{limit_clause query} ;"
-
-    query_text = """
-        select row_to_json(row)
-        from (
-            select #{fields}
-            from   code #{join_clause}
-            join   (
-              select * from crossrefs
-            ) xr on (xr.all_codes_id = code.id_)
-            #{in_clause query, 'year'} #{in_clause query, 'code'}
-            #{group_by_clause} #{limit_clause query}  
-        ) row;
-    """
+                  #{group_by_clause} #{limit_clause query} ; """
     
-    console.log "\nquery text is\n#{query_text}\n"
+    # console.log "\nquery text is\n#{query_text}\n"
     
     client.query query_text, null, (err, result) ->
         if err
@@ -84,6 +73,4 @@ module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
         if group_by_clause
             for row in result.rows
                 row.crossrefs = JSON.parse row.crossrefs
-                console.log "nparsing of crossrefs was successful\n"
-        console.log "query fetched #{result.rows.length} rows"
         sendResults result.rows

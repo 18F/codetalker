@@ -5,6 +5,7 @@ var should = require('should'),
     request = require('supertest');
 
 describe('Querying NAICS by year', function() {
+  this.timeout(5000);
   
   it('should respond with JSON array when given a valid year', function(done) {
     request(app)
@@ -97,7 +98,6 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-
         res.body.should.have.property('num_found', 2209); 
         done();
       });
@@ -110,7 +110,7 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('num_found', 2209); 
+        res.body.should.have.property('num_found', 10); 
         res.body.results.should.have.property('length', 10); 
         done();
       });
@@ -123,7 +123,6 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        (res.body.results[0]).should.have.property('seq_no'); 
         (res.body.results[0]).should.have.property('code'); 
         (res.body.results[0]).should.have.property('title'); 
         (res.body.results[0]).should.have.property('description');
@@ -138,8 +137,25 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        console.log("testing the results");
-        console.log(res.body.results);
+        (res.body.results[0]).should.have.property('title'); 
+        (res.body.results[0]).should.not.have.property('description');
+        (res.body.results[0]).should.not.have.property('seq_no');
+        (res.body.results[0]).should.not.have.property('code');
+        (res.body.results[1]).should.have.property('title'); 
+        (res.body.results[1]).should.not.have.property('description'); 
+        (res.body.results[1]).should.not.have.property('seq_no');
+        (res.body.results[1]).should.not.have.property('code');
+        done();
+      });
+  });
+   
+  it('should recognize field names case-insensitively', function (done) {
+      request(app)
+      .get('/api/q?year=2012&limit=2&field=tItLe')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
         (res.body.results[0]).should.have.property('title'); 
         (res.body.results[0]).should.not.have.property('description');
         (res.body.results[0]).should.not.have.property('seq_no');
@@ -167,14 +183,15 @@ describe('Querying NAICS by year', function() {
       });
   });
    
-   it('should return empty objects if only nonexistent fields specified', function (done) {
-      request(app)
-      .get('/api/q?year=2012&limit=1&field=foo')
-      .expect(200)
+  it('should throw error if only nonexistent fields specified', function(done) {
+    request(app)
+      .get('/api/q?year=2012&field=foo')
+      .expect(400)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.results.should.eql([{}]);
+        res.body.should.have.property('message', 'Fields that can be specified: code, year, title, description, crossrefs');
+        res.body.should.have.property('status', 400); 
         done();
       });
   });

@@ -13,7 +13,11 @@ in_clause = (query, field_name) ->
         return " AND code.#{field_name} IN (#{quote_delimited_string_list query[field_name]})"
 
 limit_clause = (query) ->
+    if (not query.limit?)
+        query.limit = 25
     if query.limit
+        if query.limit > 50
+            query.limit = 50
         if query.page
             page = " OFFSET #{query.limit * (query.page - 1)}"
         else if query.start

@@ -78,28 +78,28 @@ describe('Querying NAICS by year', function() {
       });
   });
 
-  it('should return all 2,328 entries for year 2007', function (done) {
+  it('should apply a limit of 25 records if no limit is specified', function (done) {
       request(app)
       .get('/api/q?year=2007')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-
-        res.body.should.have.property('num_found', 2328); 
+        res.body.should.have.property('num_found', 25); 
+        res.body.results.should.have.property('length', 25); 
         done();
       });
   });
 
-
-  it('should return all 2209 entries for year 2012', function (done) {
+  it('should apply a limit of 25 records even if limit set higher', function (done) {
       request(app)
-      .get('/api/q?year=2012')
+      .get('/api/q?year=2007&limit=100')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('num_found', 2209); 
+        res.body.should.have.property('num_found', 50); 
+        res.body.results.should.have.property('length', 50); 
         done();
       });
   });

@@ -8,11 +8,17 @@ before_install:
 - sudo easy_install2 pip
 - sudo pip2 install psycopg2
 - sudo pip2 install htsql-pgsql
+- sudo pip2 install supervisor
 - sudo easy_install3 pip
 - sudo pip3 install ddlgenerator
 - psql -c 'create database codetalker;' -U postgres
 - psql -f data/naics_dump.sql -U postgres codetalker
 - psql -c "select count(*) from all_codes" -U postgres codetalker
+- sudo cp config/htsql.conf /etc/init/
+- sudo service htsql start
+- sleep 5  # give HTSQL time to come online
+- service htsql status
+- curl "http://127.0.0.1:8080/meta(/table)/:json"
 - npm install -g grunt-cli
 - npm install -g bower
 - npm install -g coffee-script

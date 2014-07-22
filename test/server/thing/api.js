@@ -85,20 +85,18 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('num_found', 25); 
         res.body.results.should.have.property('length', 25); 
         done();
       });
   });
 
-  it('should apply a limit of 25 records even if limit set higher', function (done) {
+  it('should apply a limit of 50 records even if limit set higher', function (done) {
       request(app)
       .get('/api/q?year=2007&limit=100')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('num_found', 50); 
         res.body.results.should.have.property('length', 50); 
         done();
       });
@@ -111,7 +109,6 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('num_found', 10); 
         res.body.results.should.have.property('length', 10); 
         done();
       });
@@ -191,7 +188,7 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('message', 'Fields that can be specified: code, year, title, description, crossrefs');
+        res.body.should.have.property('message', 'Only fields code,year,title,description,crossrefs accepted');
         res.body.should.have.property('status', 400); 
         done();
       });
@@ -214,7 +211,6 @@ describe('Querying NAICS by year', function() {
         .expect('Content-Type', /json/)
         .end(function(err, res) {
           if (err) return done(err);
-          res.body.should.have.property('num_found', 5); 
           res.body.results.should.have.property('length', 5);
           (_.isEqual(res.body.results[0], first_results[5])).should.be.true;
           (_.isEqual(res.body.results[1], first_results[6])).should.be.true;

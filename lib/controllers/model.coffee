@@ -6,21 +6,10 @@ module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
         if err
             returnError 400, err
             return
-        console.log body 
         body = JSON.parse body
-        console.log "body.results #{body.results}"
-        console.log "body.results keys #{(k for k, v of body.results)}"
-        console.log "body.results[0] keys #{(k for k, v of body.results[0])}"
-        console.log "body.results[0].num_found #{body.results[0].num_found}"
-        console.log "body.results[0].code #{body.results[0].code}"
-        console.log "body.results[0].code keys #{(k for k, v of body.results[0].code)}"
-        console.log "body.results[0].code[0] #{body.results[0].code[0]}"
-        console.log "contents of body.results[0].code[0] {JSON.stringify(body.results[0].code[0])}"
-        console.log "body.results[0].code[0] keys #{(k for k, v of body.results[0].code[0])}"
         results =
             num_found: body.results[0].num_found
             results: body.results[0].code
-            
         sendResults(results)
         
 replaceArrayElement = (inpt, target, replace_with) ->

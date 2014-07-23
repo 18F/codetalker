@@ -13,7 +13,7 @@ before_install:
 - sudo pip3 install ddlgenerator
 - psql -c 'create database codetalker;' -U postgres
 - psql -f data/test_data_slice.sql -U postgres codetalker
-- psql -c "select count(*) from all_codes" -U postgres codetalker
+- psql -c "select count(*) from code" -U postgres codetalker
 - sudo cp config/htsql.conf /etc/init/
 - sudo service htsql start
 - sleep 5  # give HTSQL time to come online

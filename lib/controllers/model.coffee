@@ -7,14 +7,9 @@ module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
             returnError 400, err
             return
         body = JSON.parse body
-        rows = []
-        for row in body.results[0].code
-            actual_contractors = (c.ccr_raw[0] for c in row.contractors)
-            row.contractors = actual_contractors
-            rows.push row
         results =
             num_found: body.results[0].num_found
-            results: rows
+            results: body.results[0].code
         sendResults(results)
         
 replaceArrayElement = (inpt, target, replace_with) ->
@@ -36,7 +31,8 @@ filter = (query) ->
     "?is_null(part_of_range)&year='#{query.year}'" + "#{code}"
     
 htsql_query = (query) ->
-    all_fields = ['code','year','title','description','crossrefs','contractors']
+    #all_fields = ['code','year','title','description','crossrefs','contractors']
+    all_fields = ['code','year','title','description','crossrefs']
     if query.field
         if typeof query.field is 'string'
             fields = [query.field,]
@@ -50,7 +46,7 @@ htsql_query = (query) ->
         fields = all_fields
         
     fields = replaceArrayElement fields, 'crossrefs', '/crossrefs{code,text}'
-    fields = replaceArrayElement fields, 'contractors', '/ccr_naics{/ccr_raw} :as contractors'
+    #fields = replaceArrayElement fields, 'contractors', '/ccr_naics{/ccr_raw} :as contractors'
         
     if not query.limit?
         query.limit = 25

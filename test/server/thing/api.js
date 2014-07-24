@@ -29,15 +29,47 @@ describe('Querying NAICS by year', function() {
       });
   });
 
-  it('should require a year parameter', function(done) {
+  it('should respond with JSON array when given a valid YYYYMMDD date', function(done) {
     request(app)
-      .get('/api/q')
-      .expect(400)
+      .get('/api/q?date=20140622')
+      .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('message', 'Please include a NAICS year.');
-        res.body.should.have.property('status', 400);
+        res.body.results.should.be.instanceof(Array);
+      });
+
+      request(app)
+      .get('/api/q?date=20101001')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.results.should.be.instanceof(Array);
+        done();
+      });
+  });
+  
+   it('should return results from correct year when `date` argument present', function (done) {
+      request(app)
+      .get('/api/q?date=20100622&limit=1')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        (res.body.results[0].year).should.equal('2007');
+        done();
+      });
+  });
+   
+  it('should return 2012 results if `date` argument absent', function (done) {
+      request(app)
+      .get('/api/q?limit=1')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        (res.body.results[0].year).should.equal('2012');
         done();
       });
   });

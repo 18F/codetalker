@@ -31,6 +31,44 @@ How to get codes, and information related to that code
 
 --
 
+Get all NAICS codes for a given YYYYMMDD date (only 2007 and 2012 are available right now.)
+GET /q{?date}
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "name": "2007 NAICS Codes",
+    "year": 2007,
+    "items": [
+        {
+            "seq_no": 1,
+            "code": 11,
+            "title": "Agriculture, Forestry, Fishing and Hunting",
+            "trilateral": 1
+        },
+        {  ...  }
+    ]
+}
+
+Get all NAICS codes for the most recent NAICS year if no date is given
+GET /q
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+    "name": "2012 NAICS Codes",
+    "year": 2012,
+    "items": [
+        {
+            "seq_no": 1,
+            "code": 11,
+            "title": "Agriculture, Forestry, Fishing and Hunting",
+            "trilateral": 1
+        },
+        {  ...  }
+    ]
+}
+
 Get all NAICS codes for a given year (only 2007 and 2012 are available right now.)
 GET /q{?year}
 > Accept: application/json

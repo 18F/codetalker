@@ -9,8 +9,9 @@ module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
         body = JSON.parse body
         rows = []
         for row in body.results[0].code
-            actual_contractors = (c.ccr_raw[0] for c in row.contractors)
-            row.contractors = actual_contractors
+            if row.contractors?
+                actual_contractors = (c.ccr_raw[0] for c in row.contractors)
+                row.contractors = actual_contractors
             rows.push row
         results =
             num_found: body.results[0].num_found

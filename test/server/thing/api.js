@@ -6,7 +6,7 @@ var should = require('should'),
     request = require('supertest');
 
 describe('Querying NAICS by year', function() {
-  this.timeout(5000);
+  this.timeout(50000);
   
   it('should respond with JSON array when given a valid year', function(done) {
     request(app)
@@ -188,7 +188,7 @@ describe('Querying NAICS by year', function() {
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
-        res.body.should.have.property('message', 'Only fields code,year,title,description,crossrefs accepted');
+        res.body.should.have.property('message', 'Only fields code,year,title,description,crossrefs,contractors accepted');
         res.body.should.have.property('status', 400); 
         done();
       });

@@ -7,27 +7,6 @@ var should = require('should'),
 
 describe('Querying NAICS by year', function() {
   this.timeout(5000);
-  
-  it('should respond with JSON array when given a valid year', function(done) {
-    request(app)
-      .get('/api/q?year=2012')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.body.results.should.be.instanceof(Array);
-      });
-
-      request(app)
-      .get('/api/q?year=2007')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.body.results.should.be.instanceof(Array);
-        done();
-      });
-  });
 
   it('should respond with JSON array when given a valid YYYYMMDD date', function(done) {
     request(app)
@@ -97,22 +76,9 @@ describe('Querying NAICS by year', function() {
       });
   });
 
-  it('should reject an invalid NAICS year', function(done) {
+  it("should generate an error if date parameter is valid but we don't have data for it", function(done) {
     request(app)
-      .get('/api/q?year=2099')
-      .expect(400)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.body.should.have.property('message', 'Please use a valid NAICS year.');
-        res.body.should.have.property('status', 400); 
-        done();
-      });
-  });
-
-  it("should generate an error if year parameter is valid but we don't have data for it", function(done) {
-    request(app)
-      .get('/api/q?year=2002')
+      .get('/api/q?date=20020101')
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -122,7 +88,7 @@ describe('Querying NAICS by year', function() {
       });
 
       request(app)
-      .get('/api/q?year=1997')
+      .get('/api/q?date=20000831')
       .expect(404)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -135,7 +101,7 @@ describe('Querying NAICS by year', function() {
 
   it('should apply a limit of 25 records if no limit is specified', function (done) {
       request(app)
-      .get('/api/q?year=2007')
+      .get('/api/q?date=20070522')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -147,7 +113,7 @@ describe('Querying NAICS by year', function() {
 
   it('should apply a limit of 50 records even if limit set higher', function (done) {
       request(app)
-      .get('/api/q?year=2007&limit=100')
+      .get('/api/q?date=20070522&limit=100')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -159,7 +125,7 @@ describe('Querying NAICS by year', function() {
 
     it('should return 10 results when limit 10', function (done) {
       request(app)
-      .get('/api/q?year=2012&limit=10')
+      .get('/api/q?date=20120901&limit=10')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -171,7 +137,7 @@ describe('Querying NAICS by year', function() {
 
    it('should return all fields if `field` argument absent', function (done) {
       request(app)
-      .get('/api/q?year=2012&limit=1')
+      .get('/api/q?date=20121212&limit=1')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -185,7 +151,7 @@ describe('Querying NAICS by year', function() {
    
    it('should only return single requested field', function (done) {
       request(app)
-      .get('/api/q?year=2012&limit=2&field=title')
+      .get('/api/q?date=20121212&limit=2&field=title')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -204,7 +170,7 @@ describe('Querying NAICS by year', function() {
    
   it('should recognize field names case-insensitively', function (done) {
       request(app)
-      .get('/api/q?year=2012&limit=2&field=tItLe')
+      .get('/api/q?limit=2&field=tItLe')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -223,7 +189,7 @@ describe('Querying NAICS by year', function() {
 
    it('should only return multiple requested fields', function (done) {
       request(app)
-      .get('/api/q?year=2012&field=code&limit=1&field=title')
+      .get('/api/q?field=code&limit=1&field=title')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -238,7 +204,7 @@ describe('Querying NAICS by year', function() {
    
   it('should throw error if only nonexistent fields specified', function(done) {
     request(app)
-      .get('/api/q?year=2012&field=foo')
+      .get('/api/q?field=foo')
       .expect(400)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
@@ -254,14 +220,14 @@ describe('Querying NAICS by year', function() {
       // the page 2 records should be the same as the last 5 from page 1
       var first_results;
       request(app)
-      .get('/api/q?year=2012&limit=10&field=code&page=1')
+      .get('/api/q?limit=10&field=code&page=1')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
         first_results = res.body.results;
         request(app)
-        .get('/api/q?year=2012&limit=5&field=code&page=2')
+        .get('/api/q?limit=5&field=code&page=2')
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
@@ -280,14 +246,14 @@ describe('Querying NAICS by year', function() {
       // the first row returned from the second query should match the third of the first query
       var first_results;
       request(app)
-      .get('/api/q?year=2012&limit=5&field=code')
+      .get('/api/q?limit=5&field=code')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
         if (err) return done(err);
         first_results = res.body.results;
         request(app)
-        .get('/api/q?year=2012&limit=5&field=code&start=3')
+        .get('/api/q?limit=5&field=code&start=3')
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res) {

@@ -74,6 +74,29 @@ describe('Querying NAICS by year', function() {
       });
   });
 
+  it('should reject an invalid date', function(done) {
+    request(app)
+      .get('/api/q?date=platypus')
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('message', 'Date format YYYYMMDD expected.');
+        res.body.should.have.property('status', 400); 
+      });
+
+    request(app)
+      .get('/api/q?date=07-JUN-2014')
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('message', 'Date format YYYYMMDD expected.');
+        res.body.should.have.property('status', 400); 
+        done();
+      });
+  });
+
   it('should reject an invalid NAICS year', function(done) {
     request(app)
       .get('/api/q?year=2099')

@@ -16,6 +16,8 @@ module.exports.dateToYear = (dt) ->
     possible_years = [2012, 2007, 2002, 1997]
     if !dt?
         return possible_years[0]
+    if not /^\d{8}$/.test(dt)
+        throw "Date format YYYYMMDD expected."
     yr = parseInt(dt[..3])
     lesser_years = (y for y in possible_years when y <= yr)
     if lesser_years.length

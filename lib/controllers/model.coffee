@@ -11,7 +11,20 @@ module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
             num_found: body.results[0].num_found
             results: body.results[0].code
         sendResults(results)
-        
+
+module.exports.dateToYear = (dt) ->
+    possible_years = [2012, 2007, 2002, 1997]
+    if !dt?
+        return possible_years[0]
+    if not /^\d{8}$/.test(dt)
+        throw "Date format YYYYMMDD expected."
+    yr = parseInt(dt[..3])
+    lesser_years = (y for y in possible_years when y <= yr)
+    if lesser_years.length
+        return "#{lesser_years[0]}"
+    else
+        return null
+    
 replaceArrayElement = (inpt, target, replace_with) ->
     # replace ALL appearances of `target` with ONE of `replace_with`, at the end
     # cannot believe I have to write this by hand

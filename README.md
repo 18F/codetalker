@@ -8,7 +8,7 @@ Code Talker is a set of API endpoints to enable discovery and understanding of v
 Code Talker 's NAICS endpoints return NAICS data in JSON format. Information stored on the server has been scraped or collected from files on the Census.gov web site. Most of the information for 2007 and 2012 has now been scraped thanks to the addition of a python scraper by Mike Migurski (see ``./data/scrape-examples-xrefs``).
 
 ## NAICS
-[NAICS](http://www.census.gov/eos/www/naics/) (North American Industry Classification System) is maintained by the United States Bureau of Labor Statistics to classify business types. The classification system is currently hosted by the [Census Bureau](http://www.census.gov/eos/www/naics/) and provided in various Excel and PDF documents.  Our goal is to improve on the Census Bureau's offerings by providing an API to make information machine-readable, with better search functionality, to assist with developing applications that depend on understanding or collecting information about businesses. 
+[NAICS](http://www.census.gov/eos/www/naics/) (North American Industry Classification System) is maintained by the United States Bureau of Labor Statistics to classify business types. The classification system is currently hosted by the [Census Bureau](http://www.census.gov/eos/www/naics/) and provided in various Excel and PDF documents.  Our goal is to improve on the Census Bureau's offerings by providing an API to make information machine-readable, with better search functionality, to assist with developing applications that depend on understanding or collecting information about businesses.
 
 ## Installation as a local server
 
@@ -23,21 +23,21 @@ First install the lastest Vagrant () and Virtualbox (4.3.12+). Then run the belo
 vagrant plugin install vagrant-vbguest
 vagrant up
 vagrant ssh
-``` 	
+```
 
 ### (Alternately) Installation without Vagrant
 
 
-1) Download and install [Node.js](http://nodejs.org/) and [Ruby](rubylang.org).  
+1) Download and install [Node.js](http://nodejs.org/) and [Ruby](rubylang.org).
 
-2) 
+2)
 
     sudo npm install -g grunt-cli bower
     sudo gem install compass
 
 ## Setup
 
-After installation of the software, 
+After installation of the software,
 
 1) Clone this repository to a folder on your computer. The rest of this document will refer to this folder as `$PROJECT_ROOT`.
 
@@ -50,7 +50,7 @@ After installation of the software,
     nodenv rehash
     bower install
     npm install
-    
+
 ### Every time you sync $PROJECT_ROOT with the remote GitHub repo
 
 1) Update the project dependencies.
@@ -71,9 +71,9 @@ After installation of the software,
 
 ### API example requests
 
-(To run these examples against your local development server, replace 
+(To run these examples against your local development server, replace
 `http://api.data.gov/gsa/naics/` with `http://localhost:9000/api/`)
- 
+
 Example request
 
     http://api.data.gov/gsa/naics/q?year=2012&code=519120
@@ -139,3 +139,14 @@ We use the [GitHub issue tracker][issues] to track bugs and features. Before sub
 [fork]: http://help.github.com/fork-a-repo/
 [branch]: http://learn.github.com/p/branching.html
 [pr]: http://help.github.com/send-pull-requests/
+
+
+### Public domain
+
+All work on this project (by 18F, and contributors to 18F), since its forking from Code for America, is in the worldwide [public domain](LICENSE.md). As stated in [CONTRIBUTING](CONTRIBUTING.md):
+
+> This project is in the public domain within the United States, and copyright and related rights in the work worldwide are waived through the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
+>
+> All contributions to this project will be released under the CC0 dedication. By submitting a pull request, you are agreeing to comply with this waiver of copyright interest.
+
+See [LICENSE.md](LICENSE.md) for more details on pre-fork and post-fork licensing.

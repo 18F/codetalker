@@ -261,3 +261,25 @@ GET /s{?year,terms}
 Conversions between NAICS years and other code systems
 For instance, SIP or NIGP.  (this is a placeholder for a potential future feature.)
 --
+
+--
+SAM Entity Management public data
+From www.sam.gov's FOIA data package: 
+Entity registration data publicly available under the Freedom of Information Act (FOIA) for those registered in SAM to do business with the Federal government.
+--
+
+--
+
+Get all data for a given entry, by its CAGE code
+GET /contractors/{cagecode}
+> Accept: application/json
+< 200
+< Content-Type: application/json
+{
+  "contractors":
+    {
+      "cage_code":"5CX97",
+      "ccr_extract_code":"A",
+      { ... }
+    }
+}

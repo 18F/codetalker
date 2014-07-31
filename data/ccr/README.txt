@@ -1,3 +1,4 @@
+Entity management data from SAM - www.sam.gov
 
 Data is extracted from https://www.sam.gov/public-extracts/CCR-FOIA/CCR_FOIA_Extract.zip
 and described at https://www.sam.gov/sam/transcript/BPNSE_Extract%20Layout%20Level%200%20FOIA.pdf.

@@ -1,7 +1,24 @@
 request = require "request"
+
+url = (content) ->
+    "http://127.0.0.1:8080/#{content}/:json"
            
+module.exports.sendOneContractor = (query, sendResults, returnError) ->
+    qry = "ccr_raw?cage_code='#{query.params.cagecode}'"
+    request url(qry), (err, response, body) ->
+        if err
+            returnError 400, err
+            return
+        body = JSON.parse body
+        # convert to JSONAPI format for one resource
+        contractors = body.ccr_raw
+        if contractors.length
+            result = { contractors: contractors[0] }
+            sendResults result
+        else
+            returnError 404, "No record found for CAGE #{query.params.cagecode}."
+
 module.exports.sendResultsFromDb = (query, sendResults, returnError) ->
-    qry = htsql_query query, returnError
     request htsql_query(query), (err, response, body) ->
         if err
             returnError 400, err
@@ -26,9 +43,6 @@ replaceArrayElement = (inpt, target, replace_with) ->
         result.push(replace_with)
     return result
         
-url = (content) ->
-    "http://127.0.0.1:8080/#{content}/:json"
-    
 filter = (query) ->
     if query.code
         code = "&code='#{query.code}'"

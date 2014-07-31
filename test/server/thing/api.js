@@ -247,19 +247,14 @@ describe('Querying NAICS by year', function() {
   // contractors
   
   it('should provide a single contractor record when queried with single resource URL', function(done) {
-    console.log('before making request');
-    console.log(process.hrtime());
     request(app)
       .get('/api/contractors/5CX97')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {
-        console.log('received result');
-        console.log(process.hrtime());
         if (err) return done(err);
         res.body.contractors.cage_code.should.equal('5CX97');
-        console.log('tested');
-        console.log(process.hrtime());
+        done();
       });
 
   });
@@ -273,6 +268,7 @@ describe('Querying NAICS by year', function() {
         if (err) return done(err);
         res.body.should.have.property('message', 'No record found for CAGE platypus.');
         res.body.should.have.property('status', 404);
+        done();
       });
   });
 

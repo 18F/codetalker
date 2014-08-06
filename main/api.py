@@ -21,7 +21,9 @@ class OneResource(restful.Resource):
         qry = self.model.query.filter_by(id=id)
         result = self.serializer.serialize(qry)
         if not result[self.resource_name]:
-            abort(404)
+            return ({"status": 404, "message": "That resource does not exist."},
+                    404)
+            #abort(404)
         return result
 
 

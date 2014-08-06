@@ -12,6 +12,6 @@ install_requires = [
   'psycopg2',
 ],
     packages=['codetalker'],
-    package_dir={'codetalker': 'lib', 'tests': 'tests'},
+    package_dir={'codetalker': 'main', 'tests': 'tests'},
     classifiers=['Development Status :: 2 - Pre-Alpha']
 )

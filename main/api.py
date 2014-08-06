@@ -2,11 +2,10 @@
 Run application as API server.
 """
 import os
-from flask import Flask, jsonify, abort, request
+from flask import Flask, abort, request
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext import restful
-from flask.ext.restful import fields, marshal_with
-from sqlalchemy_jsonapi import JSONAPI, JSONAPIMixin
+from sqlalchemy_jsonapi import JSONAPI
 import dateutil.parser
 
 app = Flask(__name__)

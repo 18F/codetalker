@@ -53,7 +53,60 @@ class TestCodetalker(unittest.TestCase):
         assert_in("title", result)
         assert_in("description", result)
         assert_in("examples", result)
+        
+    def testOneRequestedField(self):
+        """should return only a single requested field"""
+        response = json_response(self.test_client.get(r"/api/q?date=20140602&field=title&limit=1"), 200)
+        result = response["naics"][0] 
+        assert_not_in("code", result)
+        assert_in("title", result)
+        assert_not_in("description", result)
+        assert_not_in("examples", result)
 
+    def testCaseInsensitiveFieldNames(self):
+        """should recognize field names case-insensitively"""
+        response = json_response(self.test_client.get(r"/api/q?date=20140602&field=tItLe&limit=1"), 200)
+        result = response["naics"][0] 
+        assert_not_in("code", result)
+        assert_in("title", result)
+        assert_not_in("description", result)
+        assert_not_in("examples", result)
+        
+    def testMultipleRequestedFields(self):
+        """should only return multiple requested fields"""
+        response = json_response(self.test_client.get(r"/api/q?date=20140602&field=title&limit=1&field=code"), 200)
+        result = response["naics"][0] 
+        assert_in("code", result)
+        assert_in("title", result)
+        assert_not_in("description", result)
+        assert_not_in("examples", result)
+        
+    def testOnlyNonexisentFields(self):
+        """should throw error if only nonexistent fields specified"""
+        response = json_response(self.test_client.get(r"/api/q?date=20140602&field=foo"), 400)
+
+    def testPageOffset(self):
+        """should offset result set by number of pages specified"""
+        response = json_response(self.test_client.get(r"/api/q?limit=10&field=code&page=1"), 200)
+        page1 = response["naics"]
+        response = json_response(self.test_client.get(r"/api/q?limit=5&field=code&page=2"), 200)
+        page2 = response["naics"]
+        assert_dict_equal(page1[5], page2[0])
+        assert_dict_equal(page1[6], page2[1])
+        
+    def testStartParameter(self):
+        """should offset result set by number of records set by start parameter
+
+           we'll query 5 records, then again with start=3;
+           the first row returned from the second query should match the third of the first query
+        """
+        response = json_response(self.test_client.get(r"/api/q?limit=5&field=code"), 200)
+        page1 = response["naics"]
+        response = json_response(self.test_client.get(r"/api/q?limit=5&field=code&start=3"), 200)
+        page2 = response["naics"]
+        assert_dict_equal(page1[2], page2[0])
+        assert_dict_equal(page1[3], page2[1])
+       
     def testGetValidNAICS(self): 
         """should respond with one NAICS resource when valid ID requested"""
         response = json_response(self.test_client.get(r"/api/NAICS/2007-11111"), 200)

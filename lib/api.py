@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, jsonify, abort, request
 from flask.ext.script import Manager
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -17,7 +18,7 @@ manager = Manager(app)
 # TODO: do not return "linked" with results
 
 class NoLinkedMixin(JSONAPIMixin):
-    jsonapi_relationships_exclude = ['linked', ]
+    jsonapi_relationships_exclude = ['trilateral', 'part_of_range',]
   
 class CageModel(NoLinkedMixin, db.Model):
     __tablename__ = 'cage'
@@ -238,7 +239,6 @@ class OneResource(restful.Resource):
         result = self.serializer.serialize(qry)
         if not result[self.resource_name]:
             abort(404)
-            #raise MissingResource('%s %s not found' % (self.resource_name, id))
         return result
 
 class Naics(OneResource):
@@ -255,7 +255,16 @@ class Cage(OneResource):
 class NaicsQuery(Naics):
    
     years = [2007, 2012]
-    
+    all_fields = ['change_indicator', 'id', 'links', 'seq_no', 
+                  'code', '_year', 'title', 'part_of_range', 
+                  'description_code', 'trilateral', 'description', 
+                  'examples']
+    all_fields = set(['change_indicator', 'id', 'links', 
+                      'code', '_year', 'title', 
+                      'description', 
+                      'examples'])
+    all_includes = set(['crossrefs', 'cages'])
+   
     def _year_from_datestring(self, datestring):
         if not datestring:
             return self.years[-1]
@@ -271,14 +280,35 @@ class NaicsQuery(Naics):
     def get(self, **kwarg):
         year = self._year_from_datestring(request.args.get('date'))
         qry = NaicModel.query.filter_by(_year=year)
+        qry = qry.filter_by(part_of_range=None)
+       
         try:
             limit = min(int(request.args.get('limit', 25)), 50)
         except TypeError:
             abort(500)
         qry = qry.limit(limit)
-        result = self.serializer.serialize(qry)
+        
+        if 'page' in request.args:
+            try:
+                page = int(request.args['page'])
+            except TypeError:
+                abort(500)
+            offset = (page-1) * limit
+        else:
+            try:
+                offset = int(request.args.get('start', 1)) - 1
+            except TypeError:
+                abort(500)
+        qry = qry.offset(offset)
+         
+        fields = set([f.lower() for f in request.args.getlist('field')]) or self.all_fields
+        fields &= self.all_fields
+        includes = set([i.lower() for i in request.args.getlist('field')]) or self.all_includes
+        includes &= self.all_includes
+        if (not fields) and (not includes):
+            abort(400)
+        result = self.serializer.serialize(qry, fields=list(fields), include=list(includes))
         return result
-
 
 
 api.add_resource(Naics, '/api/NAICS/<string:id>')

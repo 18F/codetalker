@@ -1,6 +1,8 @@
+"""
+Run application as API server.
+"""
 import os
 from flask import Flask, jsonify, abort, request
-from flask.ext.script import Manager
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext import restful
 from flask.ext.restful import fields, marshal_with
@@ -89,13 +91,16 @@ class NaicsQuery(Naics):
                 abort(500)
         qry = qry.offset(offset)
          
-        fields = set([f.lower() for f in request.args.getlist('field')]) or self.all_fields
+        fields = set([f.lower() for f in request.args.getlist('field')]) \
+                 or self.all_fields
         fields &= self.all_fields
-        includes = set([i.lower() for i in request.args.getlist('field')]) or self.all_includes
+        includes = set([i.lower() for i in request.args.getlist('field')]) \
+                   or self.all_includes
         includes &= self.all_includes
         if (not fields) and (not includes):
             abort(400)
-        result = self.serializer.serialize(qry, fields=list(fields), include=list(includes))
+        result = self.serializer.serialize(qry, fields=list(fields), 
+                                           include=list(includes))
         return result
 
 

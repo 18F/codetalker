@@ -13,5 +13,8 @@ install_requires = [
 ],
     packages=['codetalker'],
     package_dir={'codetalker': 'main', 'tests': 'tests'},
+    entry_points = {
+        'console_scripts': ['codetalker_server = main.api:runserver',]
+    },
     classifiers=['Development Status :: 2 - Pre-Alpha']
 )

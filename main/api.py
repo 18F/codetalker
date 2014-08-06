@@ -44,10 +44,6 @@ api.add_resource(Cage, '/api/CAGE/<string:id>')
 class NaicsQuery(Naics):
 
     years = [2007, 2012]
-    all_fields = ['change_indicator', 'id', 'links', 'seq_no',
-                  'code', '_year', 'title', 'part_of_range',
-                  'description_code', 'trilateral', 'description',
-                  'examples']
     all_fields = set(['change_indicator', 'id', 'links',
                       'code', '_year', 'title',
                       'description',
@@ -55,6 +51,10 @@ class NaicsQuery(Naics):
     all_includes = set(['crossrefs', 'cages'])
 
     def _year_from_datestring(self, datestring):
+        """
+        Limit query results to those from the latest year not exceeding
+        the given date (or simply the most recent, if no date param given)
+        """
         if not datestring:
             return self.years[-1]
         try:
@@ -71,6 +71,7 @@ class NaicsQuery(Naics):
         qry = NaicsModel.query.filter_by(_year=year)
         qry = qry.filter_by(part_of_range=None)
 
+        # Default limit of 25 records; limit to 50 even if user requests more
         try:
             limit = min(int(request.args.get('limit', 25)), 50)
         except TypeError:
@@ -90,6 +91,10 @@ class NaicsQuery(Naics):
                 abort(500)
         qry = qry.offset(offset)
 
+        # sqlalchemy_jsonapi calls them "fields" if they're scalars and
+        # "includes" if they're linked resources, but our API uses the
+        # ``field`` parameter for all of them, to determine which to include
+        # in output
         fields = set([f.lower() for f in request.args.getlist('field')]) \
                  or self.all_fields
         fields &= self.all_fields
@@ -98,6 +103,9 @@ class NaicsQuery(Naics):
         includes &= self.all_includes
         if (not fields) and (not includes):
             abort(400)
+
+        # sqlalchemy_jsonapi does all the work of going from a SQLAlchemy query
+        # to a jsonapi.org-formatted source
         result = self.serializer.serialize(qry, fields=list(fields),
                                            include=list(includes))
         return result

@@ -1,3 +1,6 @@
+"""
+SQLAlchemy boilerplate for accessing database objects.
+"""
 from codetalker.main.api import db
 from sqlalchemy_jsonapi import JSONAPIMixin
 

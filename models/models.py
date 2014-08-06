@@ -1,6 +1,9 @@
 """
 SQLAlchemy boilerplate for accessing database objects.
 """
+import os.path
+import sys
+sys.path.append(os.path.abspath('..'))
 from codetalker.main.api import db
 from sqlalchemy_jsonapi import JSONAPIMixin
 

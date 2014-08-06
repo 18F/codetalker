@@ -2,11 +2,14 @@
 Run application as API server.
 """
 import os
+import os.path
+import sys
 from flask import Flask, abort, request
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext import restful
 from sqlalchemy_jsonapi import JSONAPI
 import dateutil.parser
+sys.path.append(os.path.abspath('..'))
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('CODETALKER_DATABASE_URI',

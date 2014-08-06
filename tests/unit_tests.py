@@ -1,7 +1,7 @@
 import json
 import unittest
 from nose.tools import *
-from codetalker.lib.api import app
+from codetalker.main.api import app
 
 class TestCodetalker(unittest.TestCase):
 

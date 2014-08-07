@@ -52,7 +52,7 @@ class NaicsQuery(Naics):
 
     years = [2007, 2012]
     all_fields = set(['change_indicator', 'id', 'links',
-                      'code', '_year', 'title',
+                      'code', 'year', 'title',
                       'description',
                       'examples'])
     all_includes = set(['crossrefs', 'cages'])
@@ -76,7 +76,7 @@ class NaicsQuery(Naics):
 
     def get(self, **kwarg):
         year = self._year_from_datestring(request.args.get('date'))
-        qry = NaicsModel.query.filter_by(_year=year)
+        qry = NaicsModel.query.filter_by(year=year)
         qry = qry.filter_by(part_of_range=None)
 
         # Default limit of 25 records; limit to 50 even if user requests more

@@ -9,7 +9,7 @@ class TestCodetalker(unittest.TestCase):
         self.test_client = app.test_client()
 
     def _years(self, response):
-        result = set(r.get("_year") for r in response["naics"])
+        result = set(r.get("year") for r in response["naics"])
         return result
     
     def testValidDateGiven(self): 

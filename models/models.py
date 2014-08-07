@@ -203,7 +203,7 @@ class NaicsModel(JSONAPIMixin, db.Model):
     jsonapi_relationships_exclude = ['linked', ]
 
     id = db.Column(db.String(11), primary_key=True)
-    _year = db.Column(db.Integer, nullable=False, index=True)
+    year = db.Column(db.Integer, nullable=False, index=True)
     seq_no = db.Column(db.Integer)
     code = db.Column(db.String(6), nullable=False, index=True)
     title = db.Column(db.String(118))

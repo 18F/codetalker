@@ -1,4 +1,8 @@
-python unify_code_files.py
-ddlgenerator --inserts --drops --force-key --key=id_ postgresql all_codes.json > all_codes.sql
-psql -f all_codes.sql -U postgres codetalker 
-psql -e -f derived_tables.sql -U postgres codetalker 
+dropdb -U postgres codetalker
+createdb -U postgres codetalker
+python gather_json_files.py
+ddlgenerator --inserts --drops --key id postgresql naics.json > naics.sql
+psql -f naics.sql -U postgres codetalker 
+psql -c "CREATE INDEX ON naics (code); CREATE INDEX ON naics (_year); CREATE INDEX ON naics (part_of_range);" -U postgres codetalker 
+psql -c "ALTER TABLE naics RENAME COLUMN _year TO year;" -U postgres codetalker
+psql -c "ALTER TABLE crossrefs ADD FOREIGN KEY (child_id) REFERENCES naics;" -U postgres codetalker
